@@ -1,0 +1,131 @@
+﻿select fc_name, fc_host, display_name, ip_adress from asu.ts_analizator
+
+Пример я нашел, но не могу собрать его
+
+using System;
+using System.Data;
+using System.Data.OracleClient;
+
+public class Test
+{
+public static void Main (string[] args)
+{
+string connectionString =
+"Data Source=testdb;" +
+"User ID=scott;" +
+"Password=tiger;";
+OracleConnection dbcon = null;
+dbcon = new OracleConnection (connectionString);
+dbcon.Open ();
+OracleCommand dbcmd = dbcon.CreateCommand ();
+string sql = "SELECT ename, job FROM scott.emp";
+dbcmd.CommandText = sql;
+OracleDataReader reader = dbcmd.ExecuteReader ();
+while (reader.Read ()) {
+string employeeName = (string) reader["ename"];
+string job = (string) reader["job"];
+Console.WriteLine ("Employee Name: {0} Job: {1}",
+employeeName, job);
+}
+// clean up
+reader.Close ();
+reader = null;
+dbcmd.CommandText = sql;
+dbcmd.ExecuteNonQuery ();
+dbcmd.Dispose ();
+dbcmd = null;
+dbcon.Close ();
+dbcon = null;
+}
+} 
+
+
+
+
+
+/********************************/
+//Program Name : ADO Connection to Oracle
+//Description : A Sample program to connect to the oracle database
+//Created On : 01 May 2001
+//Created By : Ravi Shankar Venkatarajalu
+/********************************/
+using System;
+using System.Data;
+using System.Data.ADO;
+class OracleTest
+{
+static void Main()
+{
+//UID - User Id
+//PWD - Password
+//Server - Your Service name
+//Using Microsoft ODBC for Oracle DSN-Less
+//const string strConn = "Provider=MSDASQL;DRIVER={Microsoft ODBC for ORACLE};UID=scott;PWD=tiger;Server=fnqa";
+//Using Microsoft OLEDB Provider for Oracle
+const string strConn = "Provider=MSDAORA.1;
+Data Source=oracle_db;User ID=scott;Password=tiger";
+//Using DSN Connection
+//const string strConn ="DSN=oracle_dsn;UID=scott;PWD=tiger" ;
+const string strSQL = "Select * From EMP";
+try
+{
+DataSet ds = new DataSet("EmployeesSet");
+ADODataSetCommand myCommand = new ADODataSetCommand(strSQL,strConn);
+myCommand.FillDataSet(ds,"Buyer");
+Console.WriteLine(ds.Xml);
+}
+catch(ADOException e)
+{
+Console.WriteLine("Exception Occured :{0}",e.Errors[0].Message);
+}
+}
+}
+
+
+
+OracleClient
+
+Данный пример кода предполагает наличие соединения с базой данных DEMO.CUSTOMER на сервере Oracle. 
+Кроме того, необходимо добавить ссылку на файл System.Data.OracleClient.dll. 
+Этот код возвращает данные в объекте OracleDataReader.
+
+using System;
+using System.Data;
+using System.Data.OracleClient;
+
+class Program
+{
+    static void Main()
+    {
+        string connectionString = 
+            "Data Source=ThisOracleServer;Integrated Security=yes;";
+        string queryString =
+            "SELECT CUSTOMER_ID, NAME FROM DEMO.CUSTOMER";
+        using (OracleConnection connection =
+                   new OracleConnection(connectionString))
+        {
+            OracleCommand command = connection.CreateCommand();
+            command.CommandText = queryString;
+
+            try
+            {
+                connection.Open();
+
+                OracleDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Console.WriteLine("\t{0}\t{1}",
+                        reader[0], reader[1]);
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+    }
+}
+
+
